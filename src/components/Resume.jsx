@@ -61,7 +61,7 @@ const Resume = () => {
   const handleDownloadResume = () => {
     // Create a sample resume download
     const link = document.createElement('a');
-    link.href = '/resume.pdf'; // You would place your actual resume PDF here
+    link.href = '/portfolio-website/resume.pdf'; // You would place your actual resume PDF here
     link.download = 'KhushiNakrani_Resume.pdf';
     link.click();
   };

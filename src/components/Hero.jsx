@@ -88,7 +88,7 @@ const Hero = () => {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   const link = document.createElement('a');
-                  link.href = '/resume.pdf';
+                  link.href = '/portfolio-website/resume.pdf';
                   link.download = 'KhushiNakrani_Resume.pdf';
                   link.click();
                 }}

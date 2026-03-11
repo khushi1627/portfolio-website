@@ -1,9 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt, FaFilter } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaFilter, FaStar, FaCodeBranch, FaSpinner } from 'react-icons/fa';
+import { githubService } from '../services/githubService';
 
 const Projects = () => {
   const [activeFilter, setActiveFilter] = useState('all');
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [githubUsername] = useState('khushi1627'); // You can make this configurable
+
+  // Fetch GitHub repositories
+  useEffect(() => {
+    const fetchRepos = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const reposData = await githubService.getReposWithDetails(githubUsername, 6);
+        setProjects(reposData);
+      } catch (err) {
+        console.error('Failed to fetch repositories:', err);
+        setError('Failed to load repositories. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRepos();
+  }, [githubUsername]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -24,80 +48,13 @@ const Projects = () => {
     },
   };
 
-  const projects = [
-    {
-      id: 1,
-      title: 'WeJobs Job Portal',
-      description: 'Contributed to the development of a comprehensive job portal connecting job seekers with employers. Implemented business logic, core functionalities, and database management with MySQL & MongoDB.',
-      image: 'https://picsum.photos/seed/wejobs/400/250.jpg',
-      technologies: ['PHP', 'Laravel', 'MySQL', 'MongoDB', 'JavaScript'],
-      category: 'fullstack',
-      githubLink: 'https://github.com/khushinakrani',
-      liveLink: 'https://example.com',
-      featured: true,
-    },
-    {
-      id: 2,
-      title: 'E-commerce Platform',
-      description: 'A modern e-commerce platform with product catalog, shopping cart, payment integration, and order management system using React and Node.js.',
-      image: 'https://picsum.photos/seed/ecommerce/400/250.jpg',
-      technologies: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'Stripe'],
-      category: 'mern',
-      githubLink: 'https://github.com/khushinakrani',
-      liveLink: 'https://example.com',
-      featured: true,
-    },
-    {
-      id: 3,
-      title: 'College Club Management System',
-      description: 'A platform for managing college clubs, events, memberships, and communications. Includes role-based access and event scheduling using MERN stack.',
-      image: 'https://picsum.photos/seed/collegeclub/400/250.jpg',
-      technologies: ['MongoDB', 'Express.js', 'React.js', 'Node.js', 'JWT'],
-      category: 'mern',
-      githubLink: 'https://github.com/khushinakrani',
-      liveLink: 'https://example.com',
-      featured: false,
-    },
-    {
-      id: 4,
-      title: 'Task Management App',
-      description: 'A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features.',
-      image: 'https://picsum.photos/seed/taskapp/400/250.jpg',
-      technologies: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'Socket.io'],
-      category: 'mern',
-      githubLink: 'https://github.com/khushinakrani',
-      liveLink: 'https://example.com',
-      featured: false,
-    },
-    {
-      id: 5,
-      title: 'Blog Platform',
-      description: 'A feature-rich blogging platform with markdown support, comment system, and admin panel for content management using PHP and Laravel.',
-      image: 'https://picsum.photos/seed/blog/400/250.jpg',
-      technologies: ['PHP', 'Laravel', 'MySQL', 'JavaScript', 'Bootstrap'],
-      category: 'fullstack',
-      githubLink: 'https://github.com/khushinakrani',
-      liveLink: 'https://example.com',
-      featured: false,
-    },
-    {
-      id: 6,
-      title: 'Portfolio Website',
-      description: 'A personal portfolio website built with React.js and modern web technologies to showcase my projects and skills.',
-      image: 'https://picsum.photos/seed/portfolio/400/250.jpg',
-      technologies: ['React.js', 'Tailwind CSS', 'Framer Motion', 'JavaScript', 'HTML5'],
-      category: 'mern',
-      githubLink: 'https://github.com/khushinakrani',
-      liveLink: 'https://example.com',
-      featured: false,
-    },
-  ];
-
   const filters = [
     { id: 'all', label: 'All Projects' },
-    { id: 'mern', label: 'MERN Stack' },
-    { id: 'mean', label: 'MEAN Stack' },
-    { id: 'fullstack', label: 'Full Stack' },
+    { id: 'javascript', label: 'JavaScript' },
+    { id: 'react', label: 'React' },
+    { id: 'node.js', label: 'Node.js' },
+    { id: 'python', label: 'Python' },
+    { id: 'php', label: 'PHP' },
   ];
 
   const filteredProjects = activeFilter === 'all' 
@@ -150,85 +107,142 @@ const Projects = () => {
             ))}
           </motion.div>
 
-          {/* Projects Grid */}
-          <motion.div
-            variants={containerVariants}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {filteredProjects.map((project) => (
-              <motion.div
-                key={project.id}
-                variants={itemVariants}
-                whileHover={{ y: -5 }}
-                className="bg-gray-50 dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg card-hover group"
+          {/* Loading State */}
+          {loading && (
+            <motion.div
+              variants={itemVariants}
+              className="text-center py-12"
+            >
+              <FaSpinner className="animate-spin text-4xl text-blue-500 mx-auto mb-4" />
+              <p className="text-gray-600 dark:text-gray-300">Loading repositories from GitHub...</p>
+            </motion.div>
+          )}
+
+          {/* Error State */}
+          {error && (
+            <motion.div
+              variants={itemVariants}
+              className="text-center py-12"
+            >
+              <div className="text-red-500 mb-4">
+                <p>{error}</p>
+              </div>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
               >
-                {/* Project Image */}
-                <div className="relative overflow-hidden h-48">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                  {project.featured && (
-                    <div className="absolute top-4 right-4">
-                      <span className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-semibold rounded-full">
-                        Featured
+                Try Again
+              </button>
+            </motion.div>
+          )}
+
+          {/* Projects Grid */}
+          {!loading && !error && (
+            <motion.div
+              variants={containerVariants}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              {filteredProjects.map((project) => (
+                <motion.div
+                  key={project.id}
+                  variants={itemVariants}
+                  whileHover={{ y: -5 }}
+                  className="bg-gray-50 dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg card-hover group flex flex-col h-full"
+                >
+                  {/* Project Image */}
+                  <div className="relative overflow-hidden h-48">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    {project.featured && (
+                      <div className="absolute top-4 right-4">
+                        <span className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-semibold rounded-full">
+                          Featured
+                        </span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+
+                  {/* Project Content */}
+                  <div className="p-6 flex-1 flex flex-col">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                      {project.title}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+                      {project.description}
+                    </p>
+
+                    {/* GitHub Stats */}
+                    <div className="flex items-center gap-4 mb-4 text-sm text-gray-500 dark:text-gray-400">
+                      <span className="flex items-center gap-1">
+                        <FaStar className="text-yellow-500" />
+                        {project.stars || 0}
                       </span>
+                      <span className="flex items-center gap-1">
+                        <FaCodeBranch className="text-blue-500" />
+                        {project.forks || 0}
+                      </span>
+                      {project.language && (
+                        <span className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs">
+                          {project.language}
+                        </span>
+                      )}
                     </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </div>
 
-                {/* Project Content */}
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
-                    {project.description}
-                  </p>
+                    {/* Technologies */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.technologies.slice(0, 3).map((tech, index) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-medium rounded"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {project.technologies.length > 3 && (
+                        <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs font-medium rounded">
+                          +{project.technologies.length - 3}
+                        </span>
+                      )}
+                    </div>
 
-                  {/* Technologies */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.technologies.map((tech, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-medium rounded"
-                      >
-                        {tech}
-                      </span>
-                    ))}
+                    {/* Action Buttons - Sticky at bottom */}
+                    <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <div className="flex space-x-3">
+                        <motion.a
+                          href={project.githubLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors"
+                        >
+                          <FaGithub size={16} />
+                          Code
+                        </motion.a>
+                        {project.liveLink && project.liveLink !== project.githubLink && (
+                          <motion.a
+                            href={project.liveLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all"
+                          >
+                            <FaExternalLinkAlt size={16} />
+                            Live Demo
+                          </motion.a>
+                        )}
+                      </div>
+                    </div>
                   </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex space-x-3">
-                    <motion.a
-                      href={project.githubLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors"
-                    >
-                      <FaGithub size={16} />
-                      Code
-                    </motion.a>
-                    <motion.a
-                      href={project.liveLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all"
-                    >
-                      <FaExternalLinkAlt size={16} />
-                      Live Demo
-                    </motion.a>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
 
           {/* View More Button */}
           {filteredProjects.length > 6 && (
