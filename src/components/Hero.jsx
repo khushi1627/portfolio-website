@@ -86,6 +86,12 @@ const Hero = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  const link = document.createElement('a');
+                  link.href = '/resume.pdf';
+                  link.download = 'KhushiNakrani_Resume.pdf';
+                  link.click();
+                }}
                 className="btn-secondary flex items-center justify-center gap-2"
               >
                 <FaDownload />
