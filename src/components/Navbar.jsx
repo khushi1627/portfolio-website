@@ -96,7 +96,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             {/* Social Icons */}
             <motion.a
-              href="https://github.com/khushinakrani"
+              href="https://github.com/khushi1627"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}
@@ -105,7 +105,7 @@ const Navbar = () => {
               <FaGithub size={20} />
             </motion.a>
             <motion.a
-              href="https://linkedin.com/in/khushinakrani"
+              href="https://www.linkedin.com/in/khushi-nakrani-263419294/"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}
@@ -166,7 +166,7 @@ const Navbar = () => {
               {/* Mobile Social Icons */}
               <div className="flex items-center space-x-4 px-3 py-2">
                 <a
-                  href="https://github.com/khushinakrani"
+                  href="https://github.com/khushi1627"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
@@ -174,7 +174,7 @@ const Navbar = () => {
                   <FaGithub size={20} />
                 </a>
                 <a
-                  href="https://linkedin.com/in/khushinakrani"
+                  href="https://www.linkedin.com/in/khushi-nakrani-263419294/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"

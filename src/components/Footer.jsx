@@ -8,12 +8,12 @@ const Footer = () => {
   const socialLinks = [
     {
       icon: FaGithub,
-      href: 'https://github.com/khushinakrani',
+      href: 'https://github.com/khushi1627',
       label: 'GitHub',
     },
     {
       icon: FaLinkedin,
-      href: 'https://linkedin.com/in/khushinakrani',
+      href: 'https://www.linkedin.com/in/khushi-nakrani-263419294/',
       label: 'LinkedIn',
     },
     {
