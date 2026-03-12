@@ -26,7 +26,6 @@ const Resume = () => {
     {
       title: 'Web Development Intern',
       company: 'We3vision Private Limited',
-      period: 'January 2024 - Present',
       description: [
         'Developed full-stack features using PHP and Laravel',
         'Contributed to WeJobs Job Portal (frontend + backend)',
